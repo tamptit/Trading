@@ -1,13 +1,18 @@
 pipeline {
     agent any
-     tools {
-        maven 'maven-3.8.5'
-      }
     stages {
         stage('Build') {
+            when {
+                anyOf {
+                  branch 'develop'
+                }
+              }
             steps {
                 echo 'maven-3.8.5'
-                sh 'mvn clean install -DskipTests'
+                sh '''
+                    mvn --version
+                    mvn clean install -DskipTests
+                '''
             }
         }
         stage('Test') {

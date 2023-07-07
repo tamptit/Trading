@@ -2,11 +2,6 @@ pipeline {
     agent any
     stages {
         stage('Build') {
-            when {
-                anyOf {
-                  branch 'develop'
-                }
-              }
             steps {
                 echo 'maven-3.8.5'
                 sh '''

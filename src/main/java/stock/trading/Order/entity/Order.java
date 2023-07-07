@@ -15,32 +15,38 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column(name="amount")
-    private int amount;
-
-    @Column(name="channel")
-    private String channel;
-
-    @Column(name="order_price")
-    private BigDecimal orderPrice;
-
-    @Column(name="order_time")
-    private Timestamp orderTime;
-
     @Column(name="side")
     private short side;
-
-    @Column(name="status")
-    private String status;
 
     @Column(name="stock_id")
     private String stockId;
 
-    @Column(name="trigger_conditions")
-    private String triggerConditions;
+    @Column(name="amount")
+    private int amount;
+
+    @Column(name="order_price")
+    private String orderPrice;
+
+    @Column(name="account_id")
+    private String accountId;
 
     @Column(name="type")
     private String type;
+
+    @Column(name="order_sign")
+    private String orderSign; // ki hieu lenh quy dinh HOSE
+
+    @Column(name="channel")
+    private String channel;
+
+    @Column(name="order_time")
+    private Timestamp orderTime;
+
+    @Column(name="status")
+    private String status;
+
+    @Column(name="trigger_conditions")
+    private String triggerConditions;
 
     public Order() {
     }
@@ -68,6 +74,14 @@ public class Order implements Serializable {
         this.amount = amount;
     }
 
+    public String getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
     public String getChannel() {
         return this.channel;
     }
@@ -76,11 +90,11 @@ public class Order implements Serializable {
         this.channel = channel;
     }
 
-    public BigDecimal getOrderPrice() {
-        return this.orderPrice;
+    public String getOrderPrice() {
+        return orderPrice;
     }
 
-    public void setOrderPrice(BigDecimal orderPrice) {
+    public void setOrderPrice(String orderPrice) {
         this.orderPrice = orderPrice;
     }
 

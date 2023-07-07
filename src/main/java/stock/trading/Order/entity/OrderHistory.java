@@ -19,8 +19,26 @@ public class OrderHistory implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
+	@Column(name="side")
+	private short side;
 
+	@Column(name="stock_id")
+	private String stockId;
+
+	@Column(name="amount")
 	private int amount;
+
+	@Column(name="order_price")
+	private String orderPrice;
+
+	@Column(name="account_id")
+	private String accountId;
+
+	@Column(name="type")
+	private String type;
+
+	@Column(name="order_sign")
+	private String orderSign; // ki hieu lenh quy dinh HOSE
 
 	private int channel;
 
@@ -36,21 +54,11 @@ public class OrderHistory implements Serializable {
 	@Column(name="no_order")
 	private String noOrder;
 
-	@Column(name="order_price")
-	private BigDecimal orderPrice;
-
-	private short side;
-
 	private String status;
-
-	@Column(name="stock_id")
-	private String stockId;
 
 	@Temporal(TemporalType.TIMESTAMP)
 	@Column(name="trading_date")
 	private Date tradingDate;
-
-	private String type;
 
 	public OrderHistory() {
 	}
@@ -111,12 +119,28 @@ public class OrderHistory implements Serializable {
 		this.noOrder = noOrder;
 	}
 
-	public BigDecimal getOrderPrice() {
-		return this.orderPrice;
+	public String getOrderPrice() {
+		return orderPrice;
 	}
 
-	public void setOrderPrice(BigDecimal orderPrice) {
+	public void setOrderPrice(String orderPrice) {
 		this.orderPrice = orderPrice;
+	}
+
+	public String getAccountId() {
+		return accountId;
+	}
+
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
+
+	public String getOrderSign() {
+		return orderSign;
+	}
+
+	public void setOrderSign(String orderSign) {
+		this.orderSign = orderSign;
 	}
 
 	public short getSide() {

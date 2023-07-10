@@ -1,16 +1,15 @@
 pipeline {
     agent any
     tools {
-            maven 'Maven 3.8.5'
-            jdk 'Java 11.0.18'
+            maven '3.8.5'
+            jdk '8.221'
         }
     stages {
         stage('Build') {
             steps {
-                echo 'maven-3.8.5'
+                echo 'step building maven....'
                 sh '''
                     mvn --version
-                    mvn clean install -DskipTests
                 '''
             }
         }

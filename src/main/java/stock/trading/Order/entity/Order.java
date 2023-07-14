@@ -98,6 +98,14 @@ public class Order implements Serializable {
         this.orderPrice = orderPrice;
     }
 
+    public String getOrderSign() {
+        return orderSign;
+    }
+
+    public void setOrderSign(String orderSign) {
+        this.orderSign = orderSign;
+    }
+
     public Timestamp getOrderTime() {
         return this.orderTime;
     }

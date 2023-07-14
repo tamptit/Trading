@@ -7,6 +7,11 @@ import org.springframework.web.bind.annotation.*;
 import stock.trading.Order.entity.Order;
 import stock.trading.Order.repositories.OrderRepository;
 
+import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.util.List;
+
 @RestController
 public class OrderController {
 
@@ -19,8 +24,10 @@ public class OrderController {
     }
 
     @PostMapping("/order")
-    Order newEmployee(@RequestBody Order order) {
-        kafkaTemplate.send("", order);
+    Order newOrder(@RequestBody Order order) {
+        //TODO : get User type
+        kafkaTemplate.send("tp1", order);
+        order.setOrderTime(Timestamp.valueOf(LocalDateTime.now()));
         return orderRepository.save(order);
     }
 
@@ -28,6 +35,13 @@ public class OrderController {
     Order getOrdersByStock(@PathVariable String stockId) {
         return orderRepository.findByStockId(stockId).get(0);
     }
+
+
+    @GetMapping("/order/consumer/{orderStatus}")
+    List<Order> getOrderByStatus(@PathVariable String orderStatus) {
+        return orderRepository.findByStatus(orderStatus);
+    }
+
 
 
 

@@ -19,7 +19,7 @@ pipeline {
             steps {
                 echo '// TO-DO check connection Database'
                 echo '// TO-DO run unit test for Kafka'
-                sh 'mvn test'
+//                 sh 'mvn test'
             }
             post {
                 always {

@@ -5,32 +5,60 @@ pipeline {
             args '-v /root/.m2:/root/.m2'
         }
     }
-//     tools {
-//         maven '3.8.5'
-//         jdk '8.221'
-//     }
+      environment {
+        DOCKER_REGISTRY_USERNAME = credentials('DOCKER_REGISTRY_USERNAME')
+        DOCKER_REGISTRY_PASSWORD = credentials('DOCKER_REGISTRY_PASSWORD')
+      }
+
     stages {
         stage('Build') {
             steps {
-                sh 'mvn -B -DskipTests clean package'
+                sh '''
+                    mvn -B -DskipTests clean package
+                    docker build -t order:0.1 .
+                '''
+                //java -Dspring.profiles.active=prod -jar Order-0.0.1-SNAPSHOT.jar
             }
         }
-        stage('Test') {
-            steps {
-                echo '// TO-DO check connection Database'
-                echo '// TO-DO run unit test for Kafka'
-//                 sh 'mvn test'
-            }
-            post {
-                always {
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo '// TO-DO build docker image'
-            }
-        }
+//         stage('Test') {
+//             steps {
+//                 echo '// TO-DO check connection Database'
+// //                 sh 'mvn test'
+//             }
+//             post {
+//                 always {
+//                     junit 'target/surefire-reports/*.xml'
+//                 }
+//             }
+//         }
+//         stage('Deploy') {
+//             steps {
+//                 echo '// TO-DO build docker image'
+//             }
+//         }
     }
 }
+
+// pipeline {
+//   agent any
+//   environment {
+//     DOCKER_REGISTRY_USERNAME = credentials('DOCKER_REGISTRY_USERNAME')
+//     DOCKER_REGISTRY_PASSWORD = credentials('DOCKER_REGISTRY_PASSWORD')
+//   }
+//
+//   stages {
+//     stage('Build') {
+//       steps {
+//         sh '''
+//           echo "Starting to build docker image"
+//           docker build -t <dockerhub_account>/obo:v1.${BUILD_NUMBER} -f Dockerfile .
+//         '''
+//         sh '''
+//           echo "Starting to push docker image"
+//           echo ${DOCKER_REGISTRY_PASSWORD} | docker login -u ${DOCKER_REGISTRY_USERNAME} --password-stdin
+//           docker push "<dockerhub_account>/obo:v1.${BUILD_NUMBER}"
+//         '''
+//       }
+//     }
+//   }
+// }

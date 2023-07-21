@@ -2,23 +2,50 @@ package stock.trading.Order;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
+import org.springframework.core.env.Environment;
 
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 @SpringBootApplication
 public class OrderApplication   {
 
+	@Value( "${my_name}" )
+	private String my_name;
+
+	@Value("${spring.profiles.active}")
+	private String activeProfile;
+
+	@Autowired
+	private Environment environment;
+
 	private static final Logger log = LoggerFactory.getLogger(OrderApplication.class);
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		SpringApplication.run(OrderApplication.class, args);
+		OrderApplication op = new OrderApplication();
+		String profileActive = System.getProperty("spring.profiles.active", "unknown");
+		ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+		InputStream input = classloader.getResourceAsStream("application-"+ profileActive + ".properties");
+		final Properties properties = new Properties();
+		properties.load(input);
+		System.out.println("---------- my_name ------ : "+ properties.getProperty("my_name"));
 	}
 
+	public String getMy_name() {
+		return my_name;
+	}
 
-//	@Override
+	public void setMy_name(String my_name) {
+		this.my_name = my_name;
+	}
+
+	//	@Override
 //	public void run1(String...args) throws Exception {
 //	@Bean
 //	public CommandLineRunner demo(@Autowired OrderRepository orRepo) {

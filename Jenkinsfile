@@ -14,10 +14,10 @@ pipeline {
         stage('Build') {
             steps {
                 sh '''
-                    mvn -B -DskipTests clean package
+                    mvn clean package -DskipTests
                     docker build -t order:0.1 .
                 '''
-                //java -Dspring.profiles.active=prod -jar Order-0.0.1-SNAPSHOT.jar
+                //java -Dspring.profiles.active=dev -jar Order-0.0.1-SNAPSHOT.jar
             }
         }
 //         stage('Test') {

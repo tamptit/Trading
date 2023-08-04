@@ -10,6 +10,7 @@ services:
       MYSQL_PASSWORD: tam12345678
     volumes:
       - ./mysql-data:/var/lib/mysql
+      - ./order_trading.sql:/docker-entrypoint-initdb.d/order_trading.sql
     ports:
       - "3307:3306" # <host-port>:<container-port>
   zookeeper:

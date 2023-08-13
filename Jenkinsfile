@@ -2,6 +2,7 @@ pipeline {
     agent {
         docker {
             image 'maven:3.9.3-eclipse-temurin-11'
+            args '-v /root/.m2:/root/.m2'
         }
     }
     environment {
@@ -24,8 +25,9 @@ pipeline {
             steps {
                 sh '''
                     echo '// Test run image order_48'
-                    docker run --name order_48 -it tamanh97/order:0.1
+
                 '''
+                //docker run --name order_48 -it tamanh97/order:0.1
                 //java -Dspring.profiles.active=dev -jar Order-0.0.1-SNAPSHOT.jar
             }
         }

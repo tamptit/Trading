@@ -16,9 +16,9 @@ pipeline {
                 sh '''
                     mvn clean package -DskipTests
                     echo '----->>>>> Build image <<<<<<-------'
-                    docker ps
+                    docker build --build-arg profile=prod -t tamanh97/order:0.1 .
                 '''
-                //docker build --build-arg profile=prod -t tamanh97/order:0.1 .
+                //docker ps
                 //java -Dspring.profiles.active=dev -jar Order-0.0.1-SNAPSHOT.jar
             }
         }

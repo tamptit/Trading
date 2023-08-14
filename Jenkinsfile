@@ -11,13 +11,32 @@ pipeline {
     }
 
     stages {
-        stage('Build Package and Image') {
-            steps {
-                sh '''
-                    mvn clean package -DskipTests
-                    echo '----->>>>> Build image <<<<<<-------'
-                    docker build --build-arg profile=prod -t tamanh97/order:0.1 .
-                '''
+        parallel {
+            stage('Build Maven') {
+                steps {
+                    try {
+                        sh '''
+                        mvn clean package -DskipTests
+                        echo '--------->>> Maven <<<-----------'
+                        '''
+                    } catch (Exception e) {
+                      echo 'Exception occurred: ' + e.toString()
+                      sh 'Handle the exception maven!'
+                    }
+                }
+            }
+            stage('Build Image') {
+                steps {
+                    try {
+                        sh '''
+                        echo '---------->>> Build Image <<<----------'
+                        docker build --build-arg profile=prod -t tamanh97/order:0.1 .
+                        '''
+                    } catch (Exception e) {
+                      echo 'Exception occurred: ' + e.toString()
+                      sh 'Build Image exception!'
+                    }
+                }
                 //docker ps
                 //java -Dspring.profiles.active=dev -jar Order-0.0.1-SNAPSHOT.jar
             }
@@ -26,7 +45,6 @@ pipeline {
             steps {
                 sh '''
                     echo '// Test run image order_48'
-
                 '''
                 //docker run --name order_48 -it tamanh97/order:0.1
                 //java -Dspring.profiles.active=dev -jar Order-0.0.1-SNAPSHOT.jar

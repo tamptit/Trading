@@ -11,10 +11,11 @@ pipeline {
     }
 
 stages {
-    stage('Build Maven & Image') {
-        parallel {
-            stage('Maven') {
-                steps {
+ stage('Build Maven & Image') {
+    parallel {
+        stage('Maven') {
+            steps {
+                script{
                     try {
                         sh '''
                             mvn clean package -DskipTests
@@ -26,8 +27,10 @@ stages {
                     }
                 }
             }
-            stage('Image') {
-                steps {
+        }
+        stage('Image') {
+            steps {
+                script{
                     try {
                         sh '''
                         echo '---------->>> Build Image <<<----------'
@@ -41,15 +44,19 @@ stages {
             }
         }
     }
-    stage('Run Test') {
-        steps {
-            sh '''
-                echo '// Test run image order_48'
-            '''
-            //docker run -  -name order_48 -it tamanh97/order:0.1
-            //java -Dspring.profiles.active=dev -jar Order-0.0.1-SNAPSHOT.jar
-        }
+ }
+ stage('Run Test') {
+    steps {
+        sh '''
+            echo '// Test run image order_48'
+        '''
+        //docker run -  -name order_48 -it tamanh97/order:0.1
+        //java -Dspring.profiles.active=dev -jar Order-0.0.1-SNAPSHOT.jar
     }
+ }
+
+ }// stages
+}// pipeline
 //         stage('Test') {
 //             steps {
 //                 echo '// TO-DO check connection Database'
@@ -66,8 +73,7 @@ stages {
 //                 echo '// TO-DO build docker image'
 //             }
 //         }
-  }
-}
+
 
 // pipeline {
 //   agent any

@@ -14,25 +14,29 @@ stages {
     stage('Build Maven & Image') {
         parallel {
             stage('Maven') {
-                try {
-                    sh '''
-                        mvn clean package -DskipTests
-                        echo '--------->>> Maven <<<-----------'
-                    '''
-                } catch (Exception e) {
-                  echo 'Exception occurred: ' + e.toString()
-                  sh 'Handle the exception maven!'
+                script {
+                    try {
+                        sh '''
+                            mvn clean package -DskipTests
+                            echo '--------->>> Maven <<<-----------'
+                        '''
+                    } catch (Exception e) {
+                      echo 'Exception occurred: ' + e.toString()
+                      sh 'Handle the exception maven!'
+                    }
                 }
             }
             stage('Image') {
-                try {
-                    sh '''
+                script {
+                    try {
+                        sh '''
                         echo '---------->>> Build Image <<<----------'
                         docker build --build-arg profile=prod -t tamanh97/order:0.1 .
-                    '''
-                } catch (Exception e) {
-                  echo 'Exception occurred: ' + e.toString()
-                  sh 'Build Image exception!'
+                        '''
+                    } catch (Exception e) {
+                      echo 'Exception occurred: ' + e.toString()
+                      sh 'Build Image exception!'
+                    }
                 }
             }
         }

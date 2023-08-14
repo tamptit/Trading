@@ -14,7 +14,7 @@ stages {
     stage('Build Maven & Image') {
         parallel {
             stage('Maven') {
-                script {
+                steps {
                     try {
                         sh '''
                             mvn clean package -DskipTests
@@ -27,7 +27,7 @@ stages {
                 }
             }
             stage('Image') {
-                script {
+                steps {
                     try {
                         sh '''
                         echo '---------->>> Build Image <<<----------'

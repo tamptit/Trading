@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.*;
 import org.springframework.web.bind.annotation.*;
 import stock.trading.Order.entity.Order;
 import stock.trading.Order.repositories.OrderRepository;
@@ -13,9 +14,8 @@ import stock.trading.Order.service.OrderService;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.StreamSupport;
 
 @RestController
 public class OrderController {
@@ -23,6 +23,8 @@ public class OrderController {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     @Value( "${my_name}" )
     private String my_name;
+    @Autowired
+    Environment env;
     @Autowired
     OrderRepository orderRepository;
     @Autowired
@@ -48,8 +50,19 @@ public class OrderController {
         return orders;
     }
     @GetMapping("/properties")
-    String getProperties() {
-        return my_name;
+    Properties getProperties() {
+        StringBuilder properties = new StringBuilder("");
+        properties.append(env.getProperty("my_name"));
+        properties.append(env.getProperty("spring.jpa.database-platform"));
+        properties.append(env.getProperty("spring.jpa.properties.hibernate.dialect"));
+        Properties props = new Properties();
+        MutablePropertySources propSrcs = ((AbstractEnvironment) env).getPropertySources();
+        StreamSupport.stream(propSrcs.spliterator(), false)
+                .filter(ps -> ps instanceof EnumerablePropertySource)
+                .map(ps -> ((EnumerablePropertySource) ps).getPropertyNames())
+                .flatMap(Arrays::<String>stream)
+                .forEach(propName -> props.setProperty(propName, env.getProperty(propName)));
+        return props;
     }
 
     @GetMapping("/order/insert/{stockId}")

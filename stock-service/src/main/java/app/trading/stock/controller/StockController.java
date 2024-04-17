@@ -1,38 +1,13 @@
 package app.trading.stock.controller;
 
-import app.trading.stock.service.data.StockData;
-import app.trading.stock.service.data.StockService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
-import java.util.Set;
 
 @RestController
 public class StockController {
 
-    private final StockService stockService;
-
-
-//    @Autowired //StockService stockService, StockData stockData
-    public StockController( StockService stockService) {
-        this.stockService = stockService;
-//        this.stockData = stockData;
-    }
-
-    final String filePath = "D:\\Program Files\\CafeF.SolieuGD.Upto15012024\\CafeF.UPCOM.Upto15.01.2024.csv";
-
-    @GetMapping("/test")
+    @GetMapping("/stocks")
     String testRunSuccess(){
         return "OK";
-    }
-
-
-    @GetMapping("/stocks")
-    List<String> getAllStocks(@RequestParam List<String> inputList){
-        return stockService.getSymbols(filePath, inputList);
-//        return stockData.getAllSymbols(filePath);
     }
 }

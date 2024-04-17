@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.*;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 import stock.trading.order.entity.OrderTrading;
 import stock.trading.order.repositories.OrderTradingRepository;
@@ -30,8 +31,8 @@ public class OrderController {
     @Autowired
     OrderService orderService;
 
-//    @Autowired
-//    KafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    KafkaTemplate<String, Object> kafkaTemplate;
 
     public OrderController() {
     }
@@ -45,8 +46,8 @@ public class OrderController {
 
     @GetMapping("/order/send")
     List<OrderTrading> sendOrderByKafka() {
-        List<OrderTrading> orders = orderRepository.findByStatus("WAIT");
-//        kafkaTemplate.send("tp1", orders);
+        List<OrderTrading> orders = orderRepository.findByStatus("TEST");
+        kafkaTemplate.send("tp1", orders);
         return orders;
     }
     @GetMapping("/properties")

@@ -15,4 +15,6 @@ public interface OrderTradingRepository extends JpaRepository<OrderTrading, Inte
 
     List<OrderTrading> findByStatus(String orderStatus);
 
+    OrderTrading getReferenceById(Long id);
+
 }

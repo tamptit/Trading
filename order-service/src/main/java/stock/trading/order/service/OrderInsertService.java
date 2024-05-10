@@ -8,8 +8,10 @@ import stock.trading.order.entity.OrderTrading;
 import stock.trading.order.repositories.OrderTradingRepository;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -24,6 +26,8 @@ public class OrderInsertService implements Runnable{
     private String threadName;
     private String stockId;
     private short side;
+    final int record = 100; // 1M
+    final int batch = 10; // 10K
 
     @Autowired
     OrderTradingRepository orderRepository;
@@ -46,19 +50,21 @@ public class OrderInsertService implements Runnable{
     public void run() {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss.SSS");
         // Init list Order
-        log.error("Start save for side " + side + " at "+ dtf.format(LocalDateTime.now()));
+        Instant instant = Instant.now();
         List<OrderTrading> orderList = new ArrayList<OrderTrading>();
-        for (int i = 1; i <= 30; i++) {
+        for (int i = 1; i <= record; i++) {
             OrderTrading order = new OrderTrading();
-            order.setAccountId("10" + i%5);
+            int r = (int) ((Math.random() * (100 - 10)) + 10);
+            order.setAccountId(String.valueOf(100+r));
             order.setSide(side);
-            order.setAmount(i*10);
+            order.setAmount(r); // x10
             order.setStockId(stockId);
-            order.setOrderPrice("20" + String.valueOf((i%5)*100));
+            order.setOrderPrice(String.valueOf(r)); // x 1000
             order.setType("LO"); order.setStatus("WAIT"); order.setOrderSign("CN");
-            order.setOrderTime(Timestamp.valueOf(LocalDateTime.now()));
+            order.setOrderTime(Timestamp.from(instant));
+            order.setOrderMicroTime(instant.get(ChronoField.MICRO_OF_SECOND));
             orderList.add(order);
-            if (i % 5 == 0){
+            if (i % batch == 0){
                 orderRepository.saveAllAndFlush(orderList);
                 counter.incrementAndGet();
                 orderList.clear();

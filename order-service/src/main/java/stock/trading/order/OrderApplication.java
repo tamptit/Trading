@@ -41,7 +41,7 @@ public class OrderApplication   {
 			System.out.println("spring-boot.run.profiles= " + System.getProperty("spring-boot.run.profiles", "can not get 001"));
 		}
 		System.out.println("---------- Test table in DB: size = "+ orderRepository.findAll().size());
-		ThreadTimer ts = new ThreadTimer(); ts.run();
+//		ThreadTimer ts = new ThreadTimer(); ts.run();
 	}
 
 

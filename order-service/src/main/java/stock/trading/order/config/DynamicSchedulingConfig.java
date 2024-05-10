@@ -11,8 +11,8 @@ import stock.trading.order.thread.ThreadSchedule;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-@Configuration
-@EnableScheduling
+//@Configuration
+//@EnableScheduling
 public class DynamicSchedulingConfig implements SchedulingConfigurer {
 
     static long GetDelay = 1000;

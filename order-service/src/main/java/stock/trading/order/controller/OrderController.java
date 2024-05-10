@@ -9,17 +9,21 @@ import org.springframework.core.env.*;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 import stock.trading.order.entity.OrderTrading;
+import stock.trading.order.model.OrderResult;
 import stock.trading.order.repositories.OrderTradingRepository;
 import stock.trading.order.service.OrderService;
+import stock.trading.order.service.OrderTestService;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.stream.StreamSupport;
 
 @RestController
-public class OrderController {
+public class OrderController<orderTrading> {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     @Value( "${my_name}" )
@@ -30,7 +34,6 @@ public class OrderController {
     OrderTradingRepository orderRepository;
     @Autowired
     OrderService orderService;
-
     @Autowired
     KafkaTemplate<String, Object> kafkaTemplate;
 
@@ -38,10 +41,16 @@ public class OrderController {
     }
 
     @PostMapping("/order")
-    OrderTrading newOrder(@RequestBody OrderTrading order) {
+    List<OrderResult> newOrder(@RequestBody OrderTrading order) throws ExecutionException, InterruptedException {
         //TODO : get User type
-        order.setOrderTime(Timestamp.valueOf(LocalDateTime.now()));
-        return orderRepository.save(order);
+        OrderTestService orderTestService = new OrderTestService(order, orderService, orderRepository);
+//        orderTestService.setOrder(order);
+        List<Future<OrderResult>> ordersTest = orderTestService.startTest();
+        List<OrderResult> rsOrdersTest = new ArrayList<>();
+        for (Future<OrderResult> inFuture : ordersTest) {
+            rsOrdersTest.add(inFuture.get());
+        }
+        return rsOrdersTest;
     }
 
     @GetMapping("/order/send")

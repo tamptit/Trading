@@ -1,15 +1,16 @@
+server.port : 8081
 spring.security.oauth2:
     resourceserver:
         jwt:
-            jwk-set-uri: http://localhost:8080/realms/myrealm/protocol/openid-connect/certs
-client:
-    provider:
-        keycloak:
-            issuer-uri: http://localhost:8080/realms/myrealm
-    registration:
-        spring-with-test-scope:
-            provider: keycloak
-            client-id: gateway
-            client-secret: c3Rvcm0=
-            authorization-grant-type: authorization_code
-            scope: openid
+            jwk-set-uri: http://localhost:8080/realms/storm-micro/protocol/openid-connect/certs
+    client:
+        registration:
+            keycloak:
+                client-id: storm-gateway
+                client-secret: CJQT9efYAnuQ6zxgkm9vg2fbP1WZVnvj
+                authorization-grant-type: authorization_code
+                scope: openid
+                client-name: storm-gateway
+        provider:
+            keycloak:
+                issuer-uri: http://localhost:8080/realms/storm-micro

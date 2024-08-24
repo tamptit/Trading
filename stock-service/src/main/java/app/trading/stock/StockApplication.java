@@ -3,7 +3,9 @@ package app.trading.stock;
 import jakarta.annotation.Resources;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.ldap.core.LdapTemplate;
 
 import java.io.*;
 import java.net.URISyntaxException;
@@ -18,8 +20,10 @@ import java.util.Timer;
 
 @SpringBootApplication
 //@EnableDiscoveryClient
-@ComponentScan(basePackages = "app.trading.stock")
+@ComponentScan(basePackages = {"app.trading.stock", "app.trading.stock.mf"})
 public class StockApplication {
+
+
 
 	public static void main(String[] args) throws IOException, URISyntaxException {
 		SpringApplication.run(StockApplication.class, args);
@@ -43,4 +47,6 @@ public class StockApplication {
 //		outputStream.write(strToBytes);
 //		outputStream.close();
 	}
+
+
 }

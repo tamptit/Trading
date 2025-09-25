@@ -10,7 +10,7 @@ import app.trading.investors.service.AccountService;
 
 import java.util.Optional;
 
-@RestController
+@RestController("api/public")
 public class TradingAccountController {
 
     private final AccountService accountService;

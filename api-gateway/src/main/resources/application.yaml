@@ -7,10 +7,21 @@ spring.security.oauth2:
         registration:
             keycloak:
                 client-id: storm-gateway
-                client-secret: CJQT9efYAnuQ6zxgkm9vg2fbP1WZVnvj
+                client-secret: pMCWt4ZYt9mLxWQfWHl1FjNAsYzDzzIK
                 authorization-grant-type: authorization_code
                 scope: openid
                 client-name: storm-gateway
         provider:
             keycloak:
                 issuer-uri: http://localhost:8080/realms/storm-micro
+
+spring:
+    datasource:
+        username: 'root'
+        password: 'root123'
+        url: jdbc:mysql://localhost:3306/users_trading
+        driver-class-name=com:
+            mysql:
+                cj:
+                    jdbc:
+                        Driver: com.mysql.cj.jdbc.Driver

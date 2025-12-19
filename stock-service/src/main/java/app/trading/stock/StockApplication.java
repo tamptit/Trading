@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @SpringBootApplication
 //@EnableDiscoveryClient
-@ComponentScan(basePackages = {"app.trading.stock", "app.trading.stock.mf"})
+@ComponentScan(basePackages = {"app.trading.stock"})
 public class StockApplication {
 
 

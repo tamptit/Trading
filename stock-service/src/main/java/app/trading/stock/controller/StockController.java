@@ -1,8 +1,7 @@
 package app.trading.stock.controller;
 
-import app.trading.stock.mf.ProductRepository;
+import app.trading.stock.repositories.SymbolsRepository;
 import app.trading.stock.response.ProductsResponse;
-import app.trading.stock.service.data.StockData;
 import app.trading.stock.service.data.StockService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -12,16 +11,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/stocks")
+//@Api(value = "StockController in Stock Service", description = "Operations pertaining to stock management")
 public class StockController {
 
     private final StockService stockService;
 
     @Autowired
-    private ProductRepository productRepository;
+    private SymbolsRepository symbolsRepository;
 
 
 //    @Autowired //StockService stockService, StockData stockData
@@ -42,7 +41,7 @@ public class StockController {
     @PreAuthorize("hasAuthority('ADMIN')")
     ProductsResponse getProducts(){
         ProductsResponse response = new ProductsResponse();
-        response.setProductsList(productRepository.findAll());
+        response.setSymbolsList(symbolsRepository.findAll());
         return response;
     }
 

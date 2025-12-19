@@ -10,8 +10,8 @@
 	<artifactId>stock-service</artifactId>
 	<description>Module Stock in trading system</description>
 	<properties>
-		<maven.compiler.source>17</maven.compiler.source>
-		<maven.compiler.target>17</maven.compiler.target>
+		<maven.compiler.source>25</maven.compiler.source>
+		<maven.compiler.target>25</maven.compiler.target>
 	</properties>
 
 	<dependencies>
@@ -68,6 +68,11 @@
 <!--			<version>1.5.5</version>-->
 <!--			<scope>runtime</scope>-->
 <!--		</dependency>-->
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.17.2</version>
+		</dependency>
 
 	</dependencies>
 

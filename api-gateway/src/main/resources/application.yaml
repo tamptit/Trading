@@ -7,7 +7,7 @@ spring.security.oauth2:
         registration:
             keycloak:
                 client-id: storm-gateway
-                client-secret: pMCWt4ZYt9mLxWQfWHl1FjNAsYzDzzIK
+                client-secret: IjadjPFHPt6358jRBiB94dddk1WNKM1e
                 authorization-grant-type: authorization_code
                 scope: openid
                 client-name: storm-gateway

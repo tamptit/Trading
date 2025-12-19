@@ -1,11 +1,14 @@
 package stock.trading.order.service;
 
 
+import jakarta.persistence.LockModeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-//import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import stock.trading.order.entity.OrderTrading;
 import stock.trading.order.model.OrderSign;
 import stock.trading.order.model.Sign;
 import stock.trading.order.repositories.OrderTradingRepository;
@@ -39,6 +42,31 @@ public class OrderService {
         System.out.println("======= End Service at " + dtf.format(LocalDateTime.now()));
         orderBuy.checkStatus();
         orderSell.checkStatus();
+    }
+//    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Transactional
+//    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    public OrderTrading createOrUpdateOrder(OrderTrading orderTrading, int channel){
+
+        Float amCurrent = orderRepository.getReferenceById(orderTrading.getId()).getAmount();
+        // Critical Sections
+        // change amount
+        if (amCurrent - orderTrading.getAmount() > 0){
+            orderTrading.setChannel(String.valueOf(channel));
+            float amAfterUpdate = amCurrent - orderTrading.getAmount();
+            orderTrading.setAmount(amAfterUpdate);
+            log.info("channel= " + channel + ", amAfterUpdate = " + amAfterUpdate);
+        }else {
+            log.info("---amCurrent= " + amCurrent + ", channel = " + channel);
+            OrderTrading rsError = new OrderTrading();
+            rsError.setStatus("ERROR");
+            return rsError;
+        }
+        return orderRepository.saveAndFlush(orderTrading);
+    }
+
+    public Float getOrderAmountById(int id){
+        return orderRepository.getReferenceById(id).getAmount();
     }
 
 }

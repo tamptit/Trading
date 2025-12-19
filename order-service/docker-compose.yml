@@ -18,7 +18,16 @@ services:
     container_name: zookeeper
     ports:
       - "2181:2181"
+    networks:
+      - kafka-net
+  cache:
+    image: redis:6.2-alpine
     restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass eYVX7EwVmmxKPCDmwMtyKVge8oLd2t81
+    volumes:
+      - ./redis-data:/data
 
   kafka:
     image: confluentinc/cp-kafka:6.2.0
@@ -34,7 +43,7 @@ services:
     volumes:
       - ./kafka-data:/var/lib/kafka/data
     networks:
-      - order-network
-    restart: always
+      - kafka-net
 networks:
-  order-network:
+  kafka-net:
+    driver: bridge

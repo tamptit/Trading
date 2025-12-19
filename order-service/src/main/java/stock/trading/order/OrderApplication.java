@@ -6,9 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import stock.trading.order.repositories.OrderTradingRepository;
+import stock.trading.order.thread.ThreadTimer;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.Properties;
 
 @SpringBootApplication
@@ -38,6 +41,7 @@ public class OrderApplication   {
 			System.out.println("spring-boot.run.profiles= " + System.getProperty("spring-boot.run.profiles", "can not get 001"));
 		}
 		System.out.println("---------- Test table in DB: size = "+ orderRepository.findAll().size());
+//		ThreadTimer ts = new ThreadTimer(); ts.run();
 	}
 
 

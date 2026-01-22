@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import stock.trading.order.repositories.OrderTradingRepository;
 import stock.trading.order.thread.ThreadTimer;
 
@@ -15,6 +16,7 @@ import java.net.URL;
 import java.util.Properties;
 
 @SpringBootApplication
+@EnableScheduling
 public class OrderApplication   {
 
 	private static final Logger log = LoggerFactory.getLogger(OrderApplication.class);

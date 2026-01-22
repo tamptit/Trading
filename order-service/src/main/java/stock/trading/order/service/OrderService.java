@@ -9,12 +9,17 @@ import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import stock.trading.order.entity.OrderTrading;
+import stock.trading.order.entity.OutboxEvent;
 import stock.trading.order.model.OrderSign;
 import stock.trading.order.model.Sign;
 import stock.trading.order.repositories.OrderTradingRepository;
+import stock.trading.order.repositories.OutboxEventRepository;
 
+import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -22,9 +27,10 @@ public class OrderService {
     @Autowired
     OrderTradingRepository orderRepository;
 
+    @Autowired
+    OutboxEventRepository outboxRepository;
+
     private final Logger log = LoggerFactory.getLogger(this.getClass());
-
-
 //    @KafkaListener(topics = "tp1", groupId = "C")
     public void listenGroupOrderCa_Nhan(String message) {
         OrderSign os = new OrderSign(Sign.C);
@@ -45,24 +51,41 @@ public class OrderService {
     }
 //    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Transactional
-//    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public OrderTrading createOrUpdateOrder(OrderTrading orderTrading, int channel){
-
-        Float amCurrent = orderRepository.getReferenceById(orderTrading.getId()).getAmount();
-        // Critical Sections
-        // change amount
-        if (amCurrent - orderTrading.getAmount() > 0){
-            orderTrading.setChannel(String.valueOf(channel));
-            float amAfterUpdate = amCurrent - orderTrading.getAmount();
-            orderTrading.setAmount(amAfterUpdate);
-            log.info("channel= " + channel + ", amAfterUpdate = " + amAfterUpdate);
-        }else {
-            log.info("---amCurrent= " + amCurrent + ", channel = " + channel);
-            OrderTrading rsError = new OrderTrading();
-            rsError.setStatus("ERROR");
-            return rsError;
+        Optional<OrderTrading> existOrderTradingOpt = orderRepository.findById(orderTrading.getId());
+        if (existOrderTradingOpt.isPresent()) {
+            OrderTrading existOrderTrading = existOrderTradingOpt.get();
+            float amCurrent = existOrderTrading.getAmount();
+            // change amount
+            if (amCurrent - orderTrading.getAmount() > 0){
+                orderTrading.setChannel(String.valueOf(channel));
+                float amAfterUpdate = amCurrent - orderTrading.getAmount();
+                orderTrading.setAmount(amAfterUpdate);
+                log.info("channel= " + channel + ", amAfterUpdate = " + amAfterUpdate);
+            }else {
+                log.info("---amCurrent= " + amCurrent + ", channel = " + channel);
+                OrderTrading rsError = new OrderTrading();
+                rsError.setStatus("ERROR");
+                return rsError;
+            }
         }
-        return orderRepository.saveAndFlush(orderTrading);
+        // Critical Sections
+
+        OrderTrading savedOrder = orderRepository.saveAndFlush(orderTrading);
+
+        // Transactional Outbox: Save event to the same DB in the same transaction
+        String payload = String.format("{\"orderId\":\"%s\", \"accountId\":\"%s\", \"amount\":%s, \"createdAt\":\"%s\"}",
+                savedOrder.getId(), savedOrder.getAccountId(), savedOrder.getAmount(), Instant.now());
+        
+        OutboxEvent event = new OutboxEvent(
+                "Order",
+                String.valueOf(savedOrder.getId()),
+                "OrderCreatedEvent",
+                payload
+        );
+        outboxRepository.save(event);
+
+        return savedOrder;
     }
 
     public Float getOrderAmountById(int id){

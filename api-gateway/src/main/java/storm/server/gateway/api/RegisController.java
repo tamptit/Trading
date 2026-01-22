@@ -7,14 +7,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import storm.server.gateway.model.UserDTO;
-import storm.server.gateway.service.UsersService;
 
 @RestController
 @RequestMapping("/api")
 public class RegisController {
 
-    @Autowired
-    UsersService userService;
     @Autowired
     UserDetailsService userDetailsService;
     @Autowired

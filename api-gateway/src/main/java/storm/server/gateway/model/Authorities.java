@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Entity
 @IdClass(AuthoritiesKey.class)
-@Table(name = "authorities")
+//@Table(name = "authorities")
 @Getter
 @Setter
 public class Authorities {

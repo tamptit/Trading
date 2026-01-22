@@ -50,9 +50,8 @@ public class SecurityConfig {
 
 
     @Bean
-    public SecurityFilterChain basicFilterChain(HttpSecurity http,
+    public SecurityFilterChain securityFilterChain(HttpSecurity http,
                                                 ClientRegistrationRepository clientRegistrationRepository) throws Exception {
-        http.oauth2Login(Customizer.withDefaults());
         http.logout((logout) -> {
             var logoutSuccessHandler =
                     new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
@@ -64,9 +63,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> {
                 auth.dispatcherTypeMatchers(FORWARD, ERROR).permitAll();
                 auth.requestMatchers(StringProperties.AUTH_WHITELIST).permitAll().anyRequest().authenticated();
-//                auth.requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN");
-//                auth.requestMatchers("/api/user/**").hasAuthority("ROLE_USER");
-        });
+            })
+            .oauth2ResourceServer(oauth2 -> oauth2
+                    .jwt(Customizer.withDefaults()));
         return http.build();
     }
     @Autowired

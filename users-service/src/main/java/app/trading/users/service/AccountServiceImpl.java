@@ -3,13 +3,16 @@ package app.trading.users.service;
 import app.trading.users.entity.CashAccount;
 import app.trading.users.entity.TradingAccount;
 import app.trading.users.repository.TradingAccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.NoSuchElementException;
 
 import java.util.Optional;
 
 @Service
-public class AccountServiceImpl implements AccountService{
+public class AccountServiceImpl implements AccountService {
 
     final TradingAccountRepository tradingAccountRepository;
 
@@ -42,5 +45,29 @@ public class AccountServiceImpl implements AccountService{
         return tradingAccountRepository.findByAccountId(id);
     }
 
+    @Override
+    @Transactional
+    public TradingAccount register(TradingAccount account) {
+        account.setStatus("ACTIVE");
+        return tradingAccountRepository.save(account);
+    }
 
+    @Override
+    public Page<TradingAccount> findAll(String query, Pageable pageable) {
+        return tradingAccountRepository.searchActiveAccounts(query, pageable);
+    }
+
+    @Override
+    public Optional<TradingAccount> getAccountByIdAndStatus(Integer id) {
+        return tradingAccountRepository.findByAccountIdAndStatus(id, "ACTIVE");
+    }
+
+    @Override
+    @Transactional
+    public void softDelete(Integer id) {
+        TradingAccount account = tradingAccountRepository.findByAccountId(id)
+                .orElseThrow(() -> new NoSuchElementException("Account not found"));
+        account.setStatus("INACTIVE");
+        tradingAccountRepository.save(account);
+    }
 }

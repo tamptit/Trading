@@ -5,6 +5,9 @@ import app.trading.users.entity.CashAccount;
 import app.trading.users.entity.TradingAccount;
 import app.trading.users.service.transfer.MultiThreadTestTransfer;
 import app.trading.users.service.transfer.nonsync.ThreadTransferNonSync;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import app.trading.users.service.AccountService;
 
@@ -76,5 +79,23 @@ public class TradingAccountController {
         }
         return account.get();
     }
+
+    @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
+    public TradingAccount register(@RequestBody TradingAccount account) {
+        return accountService.register(account);
+    }
+
+    @GetMapping
+    public Page<TradingAccount> list(@RequestParam(required = false) String query, Pageable pageable) {
+        return accountService.findAll(query, pageable);
+    }
+
+    @DeleteMapping("/{accountId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Integer accountId) {
+        accountService.softDelete(accountId);
+    }
+
 
 }

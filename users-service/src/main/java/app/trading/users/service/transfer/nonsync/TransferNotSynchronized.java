@@ -1,6 +1,5 @@
 package app.trading.users.service.transfer.nonsync;
 
-import app.trading.users.service.transfer.MoneyTransfer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

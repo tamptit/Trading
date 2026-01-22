@@ -9,6 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 @Repository
 public interface TradingAccountRepository extends JpaRepository<TradingAccount, Integer> {
 
@@ -18,4 +21,10 @@ public interface TradingAccountRepository extends JpaRepository<TradingAccount, 
     int updateCashValue(double numberChange, String rcmId, int accountId );
 
     Optional<TradingAccount> findByAccountId(int accountId);
+
+    @Query("SELECT t FROM TradingAccount t WHERE t.status = 'ACTIVE' AND " +
+           "(:query IS NULL OR CAST(t.accountId AS string) LIKE %:query% OR t.accountName LIKE %:query%)")
+    Page<TradingAccount> searchActiveAccounts(String query, Pageable pageable);
+
+    Optional<TradingAccount> findByAccountIdAndStatus(int accountId, String status);
 }

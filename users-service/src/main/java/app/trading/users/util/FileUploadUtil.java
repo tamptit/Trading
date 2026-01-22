@@ -1,8 +1,6 @@
 package app.trading.users.util;
 
-import org.apache.commons.lang.RandomStringUtils;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -22,7 +20,7 @@ public class FileUploadUtil {
             Files.createDirectories(uploadPath);
         }
 
-        String fileCode = RandomStringUtils.randomAlphanumeric(8);
+        String fileCode = RandomStringUtils.secure().nextAlphanumeric(8);
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
             Path filePath = uploadPath.resolve(fileCode + "-" + fileName);

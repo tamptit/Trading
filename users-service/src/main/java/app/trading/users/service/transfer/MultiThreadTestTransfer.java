@@ -5,9 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 @Getter
 @Setter
 @NoArgsConstructor

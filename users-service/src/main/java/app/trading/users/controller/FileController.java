@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @RestController("/file")
 public class FileController {
@@ -45,7 +46,7 @@ public class FileController {
             @RequestParam("file") MultipartFile multipartFile)
             throws IOException {
 
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
         long size = multipartFile.getSize();
 
         String filecode = FileUploadUtil.saveFile(fileName, multipartFile);

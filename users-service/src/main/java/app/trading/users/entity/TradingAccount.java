@@ -7,12 +7,16 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @Entity
 @Getter
 @Setter
 @Table(name="trading_account")
 @PrimaryKeyJoinColumn(name = "p_id")
-public class TradingAccount extends Citizen {
+public class TradingAccount extends Citizen implements Serializable {
+    @Serial
     private static final long serialVersionUID = 1L;
 
     public TradingAccount() {
@@ -34,6 +38,9 @@ public class TradingAccount extends Citizen {
     @Column(name="cash")
     private double cash;
 
+    @Column(name="frozen_cash")
+    private double frozenCash;
+
     @Column(name="stock_value")
     private String stockValue;
 
@@ -43,5 +50,6 @@ public class TradingAccount extends Citizen {
     @Column(name="recommend_id")
     private String recommendId;
 
-
+    @Column(name = "status")
+    private String status = "ACTIVE"; // ACTIVE, INACTIVE (Soft delete)
 }
